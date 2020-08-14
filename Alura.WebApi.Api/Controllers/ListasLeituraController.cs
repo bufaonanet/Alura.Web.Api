@@ -47,12 +47,12 @@ namespace Alura.ListaLeitura.Api.Controllers
         [HttpGet("{tipo}")]
         public IActionResult Lista(TipoListaLeitura tipo)
         {
-            var header = this.HttpContext.Request.Headers;
+            //var header = this.HttpContext.Request.Headers;
 
-            if ((!header.ContainsKey("authorization")) || !(header["authorization"] == "123"))
-            {
-                return StatusCode(401);
-            }
+            //if ((!header.ContainsKey("authorization")) || !(header["authorization"] == "123"))
+            //{
+            //    return StatusCode(401);
+            //}
 
             var lista = CriaLista(tipo);
             return Ok(lista);

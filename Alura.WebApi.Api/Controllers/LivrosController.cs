@@ -18,7 +18,7 @@ namespace Alura.ListaLeitura.Api.Controllers
             _repo = repo;
         }
 
-        [HttpGet()]
+        [HttpGet]
         [Route("{id:int}")]
         public IActionResult Recuperar(int id)
         {
@@ -45,7 +45,7 @@ namespace Alura.ListaLeitura.Api.Controllers
             return File("~/images/capas/capa-vazia.png", "image/png");
         }
 
-        [HttpGet()]
+        [HttpGet]
         [Route("")]
         public IActionResult RecuperarTodos()
         {
@@ -59,7 +59,7 @@ namespace Alura.ListaLeitura.Api.Controllers
 
         [HttpPost]
         [Route("")]
-        public IActionResult Novo([FromBody] LivroUpload model)
+        public IActionResult Novo([FromForm] LivroUpload model)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace Alura.ListaLeitura.Api.Controllers
 
         [HttpPut]
         [Route("")]
-        public IActionResult Alterar([FromBody] LivroUpload model)
+        public IActionResult Alterar([FromForm] LivroUpload model)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace Alura.ListaLeitura.Api.Controllers
             return BadRequest();
         }
 
-        [HttpDelete()]
+        [HttpDelete]
         [Route("{id:int}")]
         public IActionResult Remover(int id)
         {

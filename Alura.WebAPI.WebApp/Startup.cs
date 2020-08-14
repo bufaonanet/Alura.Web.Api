@@ -1,6 +1,4 @@
-﻿using Alura.ListaLeitura.Persistencia;
-using Alura.ListaLeitura.Seguranca;
-using Alura.ListaLeitura.Modelos;
+﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Alura.WebAPI.WebApp.Formatters;
-using Microsoft.IdentityModel.Tokens;
-using System;
 using Alura.ListaLeitura.HttpClients;
+using Alura.ListaLeitura.Seguranca;
+using Alura.ListaLeitura.Modelos;
 
 namespace Alura.ListaLeitura.WebApp
 {
@@ -24,11 +22,7 @@ namespace Alura.ListaLeitura.WebApp
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDbContext<LeituraContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("ListaLeitura"));
-            });
+        {          
 
             services.AddDbContext<AuthDbContext>(options =>
             {
@@ -46,9 +40,7 @@ namespace Alura.ListaLeitura.WebApp
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/Usuario/Login";
-            });
-
-            services.AddTransient<IRepository<Livro>, RepositorioBaseEF<Livro>>();
+            });          
 
             services.AddHttpClient<LivroApiClient>(client =>
            {
