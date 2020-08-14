@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Alura.ListaLeitura.HttpClients;
 using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.WebApp.Models;
+using System.Linq;
 
 namespace Alura.ListaLeitura.WebApp.Controllers
 {
@@ -14,7 +15,7 @@ namespace Alura.ListaLeitura.WebApp.Controllers
         private readonly LivroApiClient _api;
 
         public HomeController(LivroApiClient api)
-        {            
+        {
             _api = api;
         }
 
@@ -25,7 +26,8 @@ namespace Alura.ListaLeitura.WebApp.Controllers
         }
 
         public async Task<IActionResult> Index()
-        {
+        {           
+
             var model = new HomeViewModel
             {
                 ParaLer = await ListaDoTipo(TipoListaLeitura.ParaLer),

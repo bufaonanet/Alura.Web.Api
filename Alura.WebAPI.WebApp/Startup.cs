@@ -1,14 +1,11 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Alura.WebAPI.WebApp.Formatters;
 using Alura.ListaLeitura.HttpClients;
-using Alura.ListaLeitura.Seguranca;
-using Alura.ListaLeitura.Modelos;
 
 namespace Alura.ListaLeitura.WebApp
 {
@@ -22,45 +19,37 @@ namespace Alura.ListaLeitura.WebApp
         }
 
         public void ConfigureServices(IServiceCollection services)
-        {          
+        {
+            services.AddHttpContextAccessor();
 
-            services.AddDbContext<AuthDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("AuthDB"));
-            });
-
-            services.AddIdentity<Usuario, IdentityRole>(options =>
-            {
-                options.Password.RequiredLength = 3;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireLowercase = false;
-            }).AddEntityFrameworkStores<AuthDbContext>();
-
-            services.ConfigureApplicationCookie(options =>
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
             {
                 options.LoginPath = "/Usuario/Login";
-            });          
+            });
 
             services.AddHttpClient<LivroApiClient>(client =>
-           {
-               client.BaseAddress = new Uri("https://localhost:6001/api/");
-           });
+            {
+                client.BaseAddress = new Uri("https://localhost:6001/api/");
+            });
+
+            services.AddHttpClient<AuthApiClient>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001/api/login");
+            });
 
             services.AddMvc(options =>
                 {
                     options.OutputFormatters.Add(new LivrosCsvFormatters());
                 }
             ).AddXmlSerializerFormatters();
-
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
+
 
             app.UseStaticFiles();
             app.UseAuthentication();
