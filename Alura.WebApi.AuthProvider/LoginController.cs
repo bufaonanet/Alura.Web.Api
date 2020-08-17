@@ -46,7 +46,7 @@ namespace Alura.ListaLeitura.Services
                         audience: "Insomnia",
                         claims: direitos,
                         signingCredentials: credenciais,
-                        expires: DateTime.Now.AddMinutes(30)
+                        expires: DateTime.Now.AddHours(1)
                         );
 
                     var tokenString = new JwtSecurityTokenHandler().WriteToken(token);

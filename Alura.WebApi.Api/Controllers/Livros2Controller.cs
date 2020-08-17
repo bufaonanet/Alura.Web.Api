@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.Persistencia;
+using Alura.WebApi.Api.Modelos;
 
 namespace Alura.WebApi.Api.Controllers
 {
@@ -48,14 +49,22 @@ namespace Alura.WebApi.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public IActionResult RecuperarTodos()
+        public IActionResult RecuperarTodos(
+            [FromQuery] LivroFiltro filtro,
+            [FromQuery] LivroOrdem ordem,
+            [FromQuery] LivroPaginacao paginacao)
         {
-            var model = _repo.All.Select(x => x.ToApi()).ToList();
+            var livroPaginado = _repo
+                .All
+                .AplicarFiltro(filtro)
+                .AplicarOrdem(ordem)
+                .Select(x => x.ToApi())
+                .ToLivroPaginado(paginacao);
 
-            if (model == null)
+            if (livroPaginado == null)
                 return NotFound();
 
-            return Ok(model);
+            return Ok(livroPaginado);
         }
 
         [HttpPost]
