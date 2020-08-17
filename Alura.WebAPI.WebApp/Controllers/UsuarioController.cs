@@ -66,24 +66,24 @@ namespace Alura.ListaLeitura.WebApp.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                //var user = new Usuario { UserName = model.Login };
-                //var result = await _userManager.CreateAsync(user, model.Password);
-                //if (result.Succeeded)
-                //{
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Register(RegisterViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        //var user = new Usuario { UserName = model.Login };
+        //        //var result = await _userManager.CreateAsync(user, model.Password);
+        //        //if (result.Succeeded)
+        //        //{
 
-                //    await _signInManager.SignInAsync(user, isPersistent: false);
-                //    return RedirectToAction("Index", "Home");
-                //}
-            }
-            return View(model);
-        }
+        //        //    await _signInManager.SignInAsync(user, isPersistent: false);
+        //        //    return RedirectToAction("Index", "Home");
+        //        //}
+        //    }
+        //    return View(model);
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Logout()
