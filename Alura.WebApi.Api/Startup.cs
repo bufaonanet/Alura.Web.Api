@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Alura.ListaLeitura.Api.Formatters;
-using Alura.ListaLeitura.Modelos;
-using Alura.ListaLeitura.Persistencia;
+using Alura.WebApi.Api.Filtros;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Alura.ListaLeitura.Api.Formatters;
+using Alura.ListaLeitura.Modelos;
+using Alura.ListaLeitura.Persistencia;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Alura.WebApi.Api
 {
@@ -38,8 +35,14 @@ namespace Alura.WebApi.Api
             services.AddMvc(options =>
             {
                 options.OutputFormatters.Add(new LivrosCsvFormatters());
+                options.Filters.Add(new ErrorResponseFilter());
             }
             ).AddXmlSerializerFormatters();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             services.AddAuthentication(opt =>
             {

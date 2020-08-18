@@ -75,12 +75,11 @@ namespace Alura.WebApi.Api.Controllers
             {
                 var livro = model.ToLivro();
                 _repo.Incluir(livro);
-
                 var url = Url.Action("Recuperar", new { id = livro.Id });
                 return Created(url, livro); //retorna 201
             }
 
-            return BadRequest();
+            return BadRequest(ErrorResponse.FromModelState(ModelState));
         }
 
         [HttpPut]
