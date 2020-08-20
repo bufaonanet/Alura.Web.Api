@@ -10,6 +10,9 @@ using Alura.ListaLeitura.Api.Formatters;
 using Alura.ListaLeitura.Modelos;
 using Alura.ListaLeitura.Persistencia;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using System.Collections.Generic;
 
 namespace Alura.WebApi.Api
 {
@@ -71,15 +74,56 @@ namespace Alura.WebApi.Api
             //        new HeaderApiVersionReader("api-version")
             //        );
             //});
+
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "1.0",
+                    Title = "Livros Api",
+                    Description = "Documentação da API de livros"
+                });
+                c.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Version = "2.0",
+                    Title = "Livros Api",
+                    Description = "Documentação da API de livros"
+                });
+                c.OperationFilter<AuthResponsesOperationFilter>();
+
+
+                //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                //{
+                //    Name = "Authorization",
+                //    In = ParameterLocation.Header,
+                //    Type = SecuritySchemeType.ApiKey,
+                //    Description = "Autenticação Bearer via JWT"
+                //});
+                //c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>{
+                //    { "Bearer", new string[]{ } }
+                //});
+
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Versão 1.0");
+                c.SwaggerEndpoint("/swagger/v2/swagger.json", "Versão 2.0");
+                c.RoutePrefix = string.Empty;
+            });
+
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
             app.UseAuthentication();
             app.UseMvc();
+
+
         }
     }
 }

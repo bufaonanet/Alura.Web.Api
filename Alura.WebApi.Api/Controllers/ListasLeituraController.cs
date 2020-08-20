@@ -8,6 +8,22 @@ using Lista = Alura.ListaLeitura.Modelos.ListaLeitura;
 
 namespace Alura.ListaLeitura.Api.Controllers
 {
+    public static class ListaLeituraRepository
+    {
+        public static Lista CriaLista(TipoListaLeitura tipo, IRepository<Livro> repo)
+        {
+            return new Lista
+            {
+                Tipo = tipo.ParaString(),
+                Livros = repo.All
+                    .Where(l => l.Lista == tipo)
+                    .Select(l => l.ToApi())
+                    .ToList()
+            };
+        }
+    }
+
+
     [Authorize]
     [ApiController]
     [ApiVersion("1.0")]
@@ -22,24 +38,13 @@ namespace Alura.ListaLeitura.Api.Controllers
             _repo = repository;
         }
 
-        public Lista CriaLista(TipoListaLeitura tipo)
-        {
-            return new Lista
-            {
-                Tipo = tipo.ParaString(),
-                Livros = _repo.All
-                    .Where(l => l.Lista == tipo)
-                    .Select(l => l.ToApi())
-                    .ToList()
-            };
-        }
 
         [HttpGet]
         public IActionResult TodasListas()
         {
-            Lista paraLer = CriaLista(TipoListaLeitura.ParaLer);
-            Lista lendo = CriaLista(TipoListaLeitura.Lendo);
-            Lista lidos = CriaLista(TipoListaLeitura.Lidos);
+            Lista paraLer = ListaLeituraRepository.CriaLista(TipoListaLeitura.ParaLer, _repo);
+            Lista lendo = ListaLeituraRepository.CriaLista(TipoListaLeitura.Lendo, _repo);
+            Lista lidos = ListaLeituraRepository.CriaLista(TipoListaLeitura.Lidos, _repo);
 
             var colecao = new List<Lista> { paraLer, lendo, lidos };
             return Ok(colecao);
@@ -55,7 +60,7 @@ namespace Alura.ListaLeitura.Api.Controllers
             //    return StatusCode(401);
             //}
 
-            var lista = CriaLista(tipo);
+            var lista = ListaLeituraRepository.CriaLista(tipo, _repo);
             return Ok(lista);
         }
 
